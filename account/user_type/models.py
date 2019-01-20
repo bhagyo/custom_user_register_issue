@@ -5,14 +5,16 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
-from generaluser.models import User
+#from generaluser.models import User
 
 # A class for general user (doctor+patient)
 
+User = settings.AUTH_USER_MODEL
+
 
 class Profile(models.Model):
-    user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    bio = models.TextField(max_length=500, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True, null=True)
     location = models.CharField(max_length=30, blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
 
@@ -39,22 +41,19 @@ Doctor model ready hoy nai
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-
-        print(instance)
-        print(kwargs)
         Profile.objects.create(user=instance)
-        instance.profile.save()
+        #instance.profile.save()
 
+        '''
         if instance.doctor:
             Doctor.objects.create(user=instance)
             instance.profile.save()
         else:
             Patient.objects.create(user=instance)
             instance.profile.save()
+        '''
 
 
-'''
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
-'''
