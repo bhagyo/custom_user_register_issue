@@ -29,6 +29,16 @@ class Patient(models.Model):
     disease = models.TextField(blank=True, null=True)
 
 
+class Doctor_1(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bmdc = models.IntegerField(null=True, blank=True)
+
+
+class Patient_1(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    disease = models.TextField(blank=True, null=True)
+
+
 '''
 Todo List:
 
@@ -41,19 +51,21 @@ Doctor model ready hoy nai
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
+        print('**************************************************************************************************************')
+        print(instance)
         Profile.objects.create(user=instance)
-        #instance.profile.save()
+        instance.profile.save()
 
-        '''
-        if instance.doctor:
-            Doctor.objects.create(user=instance)
+        if instance.doctor == 0:
+            Patient_1.objects.create(user=instance)
             instance.profile.save()
         else:
-            Patient.objects.create(user=instance)
+            Doctor_1.objects.create(user=instance)
             instance.profile.save()
-        '''
 
 
+'''
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+'''

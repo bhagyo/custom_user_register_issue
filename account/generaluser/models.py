@@ -82,7 +82,7 @@ class User(AbstractBaseUser):
         unique=True,
     )
     username = models.CharField(max_length=255, unique=True)  # blank=False, null=False)
-    doctor = models.BooleanField(default=True)  # Whether this profile is a doctor or not
+    doctor = models.BooleanField(default=False)  # Whether this profile is a doctor or not
     #timestamp = models.DateTimeField(auto_add_now=True)
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)  # a admin user; non super-user
