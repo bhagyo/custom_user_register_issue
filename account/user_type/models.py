@@ -8,11 +8,9 @@ from django.conf import settings
 
 # A class for general user (doctor+patient)
 
-CustomUserModel = settings.AUTH_USER_MODEL
-
 
 class Profile(models.Model):
-    user = models.OneToOneField(CustomUserModel, on_delete=models.CASCADE)
+    user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
     birth_date = models.DateField(null=True, blank=True)
@@ -37,16 +35,17 @@ Doctor model ready hoy nai
 '''
 
 
-@receiver(post_save, sender=CustomUserModel)
+@receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-
-    if instance.doctor:
+        instance.profile.save()
+    if sender.doctor:
         Doctor.objects.create(user=instance)
+        instance.profile.save()
     else:
         Patient.objects.create(user=instance)
-    instance.profile.save()
+        instance.profile.save()
 
 
 '''
