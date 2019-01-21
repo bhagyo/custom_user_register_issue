@@ -85,7 +85,7 @@ class User(AbstractBaseUser):
     doctor = models.BooleanField(default=False)  # Whether this profile is a doctor or not
     #timestamp = models.DateTimeField(auto_add_now=True)
     active = models.BooleanField(default=True)
-    staff = models.BooleanField(default=False)  # a admin user; non super-user
+    staff = models.BooleanField(default=True)  # a admin user; non super-user
     admin = models.BooleanField(default=False)  # a superuser
     # notice the absence of a "Password field", that's built in.
 
