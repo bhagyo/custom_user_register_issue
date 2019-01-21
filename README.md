@@ -27,6 +27,6 @@ Fields which Should be created for registering a user
 ![github-pic](https://github.com/bhagyo/custom_user_register_issue/blob/master/Screenshot%20from%202019-01-21%2011-55-27.png)
 
 * Just make sure that "doctor" would be a Boolean Value
-**In this Picture we can see how the data format will be, So do so**
+    * **In this Picture we can see how the data format will be, So do so**
 
 
