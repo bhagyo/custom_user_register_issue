@@ -51,7 +51,7 @@ Doctor model ready hoy nai
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        print('**************************************************************************************************************')
+        print('Instance data is being created******************************************************')
         print(instance)
         Profile.objects.create(user=instance)
         instance.profile.save()
