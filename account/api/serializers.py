@@ -1,7 +1,12 @@
 # from django.conf import settings  # evabe likhle django te custom user nibe na
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+from rest_framework.filters import(
+    SearchFilter,
+    OrderingFilter,
+)
 from rest_framework.serializers import (
+    CharField,
     ModelSerializer,
     Serializer,
     ValidationError,
@@ -13,31 +18,58 @@ User = get_user_model()
 
 
 class UserCreationSerializer(ModelSerializer):
+    password_confirmation = CharField(label='Confirm Password')
+
     class Meta:
         model = User
         fields = [
             'username',
             'email',
             'password',
+            'password_confirmation',
             'doctor'
         ]
-        extra_kwargs = {"password": {"write_only": True}}
+        extra_kwargs = {'password': {'write_only': True}}
 
-        def create(self, validated_data):
-            print('ami ekhane achi\n')
-            print(validated_data)
-            print('amar kaj shesh\n')
-            username = validated_data['username']
-            email = validated_data['email']
-            password = validated_data['password']
-            user_obj = User(
-                email=email,
-                username=username,
-            )
-            user_obj.set_password(password)
-            user_obj.save()
-            print(user_obj)
-            return validated_data
+    def validate_username(self, data):
+        username = data['username']
+        user_qs = User.objects.filter(username=username)
+        if user_qs.exists():
+            raise ValidationError("This username is used")
+        return data
+
+    def validate_email(self, data):
+        email = data['email']
+        user_qs = User.objects.filter(email=email)
+        if user_qs.exists():
+            raise ValidationError("This email is used")
+        return data
+
+    def validate_password_confirmation(self, password_confirmation):
+        data = self.get_initial()
+        password = data.get('password')
+        password_confirmation = password_confirmation
+        if password != password_confirmation:
+            raise ValidationError('Passwords dose not matched!')
+        return password_confirmation
+
+    def create(self, validated_data):
+        print('ami ekhane achi\n')
+        print(validated_data)
+        print('amar kaj shesh\n')
+        username = validated_data['username']
+        email = validated_data['email']
+        password = validated_data['password']
+        doctor = validated_data['doctor']
+        user_obj = User(
+            email=email,
+            username=username,
+            doctor=doctor,
+        )
+        user_obj.set_password(password)
+        user_obj.save()
+        print(user_obj)
+        return validated_data
 
 
 class UserListSerializer(ModelSerializer):
