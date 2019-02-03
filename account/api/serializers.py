@@ -31,19 +31,19 @@ class UserCreationSerializer(ModelSerializer):
         ]
         extra_kwargs = {'password': {'write_only': True}}
 
-    def validate_username(self, data):
-        username = data['username']
+    def validate_username(self, username):
+        #username = data['username']
         user_qs = User.objects.filter(username=username)
         if user_qs.exists():
             raise ValidationError("This username is used")
-        return data
+        return username
 
-    def validate_email(self, data):
-        email = data['email']
+    def validate_email(self, email):
+        #email = data['email']
         user_qs = User.objects.filter(email=email)
         if user_qs.exists():
             raise ValidationError("This email is used")
-        return data
+        return email
 
     def validate_password_confirmation(self, password_confirmation):
         data = self.get_initial()
